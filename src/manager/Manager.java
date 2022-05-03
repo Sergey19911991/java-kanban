@@ -1,25 +1,24 @@
-package Manager;
+package manager;
 
-
-import Epic.Epic;
-import SubTask.Subtask;
-import Task.Task;
+import epic.Epic;
+import task.Task;
+import subTask.Subtask;
 
 import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Manager {
-    HashMap<Integer, Task> taskHashMap = new HashMap<>();
-    HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-    HashMap<Integer, Subtask> subTaskHashMap = new HashMap<>();
-    int numberTask;
+    private HashMap<Integer, Task> taskHashMap = new HashMap<>();
+    private HashMap<Integer, Epic> epicHashMap = new HashMap<>();
+    private HashMap<Integer, Subtask> subTaskHashMap = new HashMap<>();
+    private int numberTask;
 
     //Создание задачи
     public void objectTask(Task task) {
         task.setStatusTask(Task.Status.NEW);
         taskHashMap.put(numberTask, task);
         task.setId(numberTask);
-        numberTask = numberTask + 1;
+        generateId();
     }
 
     //Вывод всех задач
@@ -65,7 +64,7 @@ public class Manager {
         epic.setStatusTask(Task.Status.NEW);
         epicHashMap.put(numberTask, epic);
         epic.setId(numberTask);
-        numberTask = numberTask + 1;
+        generateId();
     }
 
     //вывод всех эпиков
@@ -123,8 +122,7 @@ public class Manager {
         subTask.setIdEpic(identifier);
         epicHashMap.get(identifier).getIdSubTask().add(numberTask);
         subTask.setId(numberTask);
-        numberTask = numberTask + 1;
-
+        generateId();
     }
 
 
@@ -136,7 +134,6 @@ public class Manager {
             System.out.print("Описание: " + subTaskHashMap.get(keySetTask).getDescriptionTask() + "; ");
             System.out.println("Статус: " + subTaskHashMap.get(keySetTask).getStatusTask() + ". ");
         }
-
     }
 
     // удаление всех подзадач
@@ -172,11 +169,13 @@ public class Manager {
     public void removeSubTaskEpicIdentifier(int identifier) {
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
         subTaskHashMap.remove(identifier);
-        for (Integer i : epicHashMap.get(numberEpic).getIdSubTask()) {
-            if (i == identifier) {
-                epicHashMap.get(numberEpic).getIdSubTask().remove(i);
+        int k = 0;
+        for (int i = 0; i < epicHashMap.get(numberEpic).getIdSubTask().size(); i++) {
+            if (epicHashMap.get(numberEpic).getIdSubTask().get(i) == identifier) {
+                k = i;
             }
         }
+        epicHashMap.get(numberEpic).getIdSubTask().remove(k);
         statusEpic(numberEpic);
     }
 
@@ -196,9 +195,9 @@ public class Manager {
         int numberNew = 0;
         int numberDone = 0;
         for (Integer id : epicHashMap.get(idEpicStatus).getIdSubTask()) {
-            if (subTaskHashMap.get(id).getStatusTask().equals("DONE")) {
+            if (subTaskHashMap.get(id).getStatusTask().equals(Task.Status.DONE)) {
                 numberDone = numberDone + 1;
-            } else if (subTaskHashMap.get(id).getStatusTask().equals("NEW")) {
+            } else if (subTaskHashMap.get(id).getStatusTask().equals(Task.Status.NEW)) {
                 numberNew = numberNew + 1;
             }
         }
@@ -209,5 +208,10 @@ public class Manager {
         } else {
             epicHashMap.get(idEpicStatus).setStatusTask(Task.Status.IN_PROGRESS);
         }
+    }
+
+    //создание идентификатора
+    private void generateId() {
+        numberTask = numberTask + 1;
     }
 }

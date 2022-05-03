@@ -1,12 +1,11 @@
-package Main;
+package main;
 
-import Epic.Epic;
-import Manager.Manager;
-import SubTask.Subtask;
-import Task.Task;
+import subTask.Subtask;
+import manager.Manager;
+import task.Task;
+import epic.Epic;
 
 public class Main {
-
     public static void main(String[] args) {
         Manager manager = new Manager();
         manager.objectTask(new Task("Переезд", "Собрать коробки"));
@@ -33,6 +32,5 @@ public class Main {
         manager.writeTask();
         manager.writeEpic();
         manager.writeSubTask();
-
     }
 }
