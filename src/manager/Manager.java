@@ -1,8 +1,8 @@
 package manager;
 
-import epic.Epic;
-import task.Task;
-import subTask.Subtask;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ public class Manager {
     private HashMap<Integer, Task> taskHashMap = new HashMap<>();
     private HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     private HashMap<Integer, Subtask> subTaskHashMap = new HashMap<>();
+
     private int numberTask;
 
     //Создание задачи
@@ -22,14 +23,12 @@ public class Manager {
     }
 
     //Вывод всех задач
-    public void writeTask() {
+    public ArrayList<Task> writeTask() {
+        ArrayList<Task> task = new ArrayList<>();
         for (Integer keySetTask : taskHashMap.keySet()) {
-            System.out.print("ID " + keySetTask + "; ");
-            System.out.print("Название Задачи: " + taskHashMap.get(keySetTask).getNameTask() + "; ");
-            System.out.print("Описание: " + taskHashMap.get(keySetTask).getDescriptionTask() + "; ");
-            System.out.println("Статус: " + taskHashMap.get(keySetTask).getStatusTask() + ". ");
+            task.add(taskHashMap.get(keySetTask));
         }
-
+        return task;
     }
 
     //Удаление всех задач
@@ -38,11 +37,8 @@ public class Manager {
     }
 
     //Вывод задачи по идентификатору
-    public void writeTaskIdentifier(int identifier) {
-        System.out.print("ID " + identifier + "; ");
-        System.out.print("Название Задачи: " + taskHashMap.get(identifier).getNameTask() + "; ");
-        System.out.print("Описание: " + taskHashMap.get(identifier).getDescriptionTask() + "; ");
-        System.out.println("Статус: " + taskHashMap.get(identifier).getStatusTask() + ". ");
+    public Task writeTaskIdentifier(int identifier) {
+        return taskHashMap.get(identifier);
     }
 
     // Удаление задачи по идентификатору
@@ -55,9 +51,8 @@ public class Manager {
         taskHashMap.remove(identifier);
         taskHashMap.put(identifier, task);
         task.setStatusTask(newStatus);
-
+        task.setId(identifier);
     }
-
 
     //создание эпика
     public void objectEpic(Epic epic) {
@@ -68,14 +63,12 @@ public class Manager {
     }
 
     //вывод всех эпиков
-    public void writeEpic() {
-        for (Integer keySetEpic : epicHashMap.keySet()) {
-            System.out.print("ID " + keySetEpic + "; ");
-            System.out.print("Название Эпика: " + epicHashMap.get(keySetEpic).getNameTask() + "; ");
-            System.out.print("Описание: " + epicHashMap.get(keySetEpic).getDescriptionTask() + "; ");
-            System.out.println("Статус: " + epicHashMap.get(keySetEpic).getStatusTask() + ". ");
+    public ArrayList<Epic> writeEpic() {
+        ArrayList<Epic> epic = new ArrayList<>();
+        for (Integer keySetTask : epicHashMap.keySet()) {
+            epic.add(epicHashMap.get(keySetTask));
         }
-
+        return epic;
     }
 
     //удаление всех эпиков
@@ -94,11 +87,8 @@ public class Manager {
 
 
     //вывод эпика по идентификатору
-    public void writeEpicIdentifier(int identifier) {
-        System.out.print("ID " + identifier + "; ");
-        System.out.print("Название Эпика: " + epicHashMap.get(identifier).getNameTask() + "; ");
-        System.out.print("Описание: " + epicHashMap.get(identifier).getDescriptionTask() + "; ");
-        System.out.println("Статус: " + epicHashMap.get(identifier).getStatusTask() + ". ");
+    public Epic writeEpicIdentifier(int identifier) {
+        return epicHashMap.get(identifier);
     }
 
 
@@ -109,9 +99,9 @@ public class Manager {
         idSubtask1 = epicHashMap.get(identifier).getIdSubTask();
         epicHashMap.remove(identifier);
         epicHashMap.put(identifier, epic);
+        epic.setId(identifier);
         epic.setStatusTask(status);
         epic.setIdSubTask(idSubtask1);
-
     }
 
 
@@ -127,13 +117,12 @@ public class Manager {
 
 
     //вывод всех подзадач
-    public void writeSubTask() {
+    public ArrayList<Subtask> writeSubTask() {
+        ArrayList<Subtask> subTask = new ArrayList<>();
         for (Integer keySetTask : subTaskHashMap.keySet()) {
-            System.out.print("ID " + keySetTask + "; ");
-            System.out.print("Название Подзадачи: " + subTaskHashMap.get(keySetTask).getNameTask() + "; ");
-            System.out.print("Описание: " + subTaskHashMap.get(keySetTask).getDescriptionTask() + "; ");
-            System.out.println("Статус: " + subTaskHashMap.get(keySetTask).getStatusTask() + ". ");
+            subTask.add(subTaskHashMap.get(keySetTask));
         }
+        return subTask;
     }
 
     // удаление всех подзадач
@@ -153,15 +142,12 @@ public class Manager {
         subtask.setStatusTask(newStatus);
         subtask.setIdEpic(numberEpic);
         statusEpic(numberEpic);
-
+        subtask.setId(identifier);
     }
 
     // вывод подзадачи по идентификатору
-    public void writeSubTaskIdentifier(int identifier) {
-        System.out.print("ID " + identifier + "; ");
-        System.out.print("Название Подзадачи: " + subTaskHashMap.get(identifier).getNameTask() + "; ");
-        System.out.print("Описание: " + subTaskHashMap.get(identifier).getDescriptionTask() + "; ");
-        System.out.println("Статус: " + subTaskHashMap.get(identifier).getStatusTask() + ". ");
+    public Subtask writeSubTaskIdentifier(int identifier) {
+        return subTaskHashMap.get(identifier);
     }
 
 
@@ -181,13 +167,12 @@ public class Manager {
 
 
     //вывод подзадач определенного эпика
-    public void writeSubTaskEpicIdentifier(int identifier) {
-        for (Integer id : epicHashMap.get(identifier).getIdSubTask()) {
-            System.out.print("ID " + id + "; ");
-            System.out.print("Название Подзадачи: " + subTaskHashMap.get(id).getNameTask() + "; ");
-            System.out.print("Описание: " + subTaskHashMap.get(id).getDescriptionTask() + "; ");
-            System.out.println("Статус: " + subTaskHashMap.get(id).getStatusTask() + ". ");
+    public ArrayList<Subtask> writeSubTaskEpicIdentifier(int identifier) {
+        ArrayList<Subtask> subTask = new ArrayList<>();
+        for (Integer keySetTask : epicHashMap.get(identifier).getIdSubTask()) {
+            subTask.add(subTaskHashMap.get(keySetTask));
         }
+        return subTask;
     }
 
     //замена статуса эпика после замены или удаления подзадачи этого эпика
@@ -214,4 +199,5 @@ public class Manager {
     private void generateId() {
         numberTask = numberTask + 1;
     }
+
 }

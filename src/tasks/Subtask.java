@@ -1,6 +1,4 @@
-package subTask;
-
-import task.Task;
+package tasks;
 
 import java.util.Objects;
 
@@ -24,19 +22,18 @@ public class Subtask extends Task {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Subtask subTask = (Subtask) obj;
-        return (idEpic == subTask.idEpic);
+        return (idEpic == subTask.idEpic)&&super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idEpic);
+        return Objects.hash(super.hashCode(),idEpic);
     }
 
     @Override
     public String toString() {
-        String result = "Subtask{" +
-                "idEpic='" + idEpic + '\'' +
-                '}';
+        String result =super.toString()+ "tasks.Subtask{" +
+                "idEpic='" + idEpic + '\'' + '}';
         return result;
     }
 }

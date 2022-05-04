@@ -1,6 +1,4 @@
-package epic;
-
-import task.Task;
+package tasks;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,19 +23,18 @@ public class Epic extends Task {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Epic epic = (Epic) obj;
-        return Objects.equals(idSubTask, epic.idSubTask);
+        return Objects.equals(idSubTask, epic.idSubTask)&&super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idSubTask);
+        return Objects.hash(super.hashCode(),idSubTask);
     }
 
     @Override
     public String toString() {
-        String result = "Epic{" +
-                "idSubTask=" + idSubTask +
-                '}';
+        String result = super.toString()+"tasks.Epic{" +
+                "idSubTask=" + idSubTask +'}';
         return result;
     }
 }
