@@ -23,18 +23,18 @@ public class Epic extends Task {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Epic epic = (Epic) obj;
-        return Objects.equals(idSubTask, epic.idSubTask)&&super.equals(obj);
+        return Objects.equals(idSubTask, epic.idSubTask) && super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),idSubTask);
+        return Objects.hash(super.hashCode(), idSubTask);
     }
 
     @Override
     public String toString() {
-        String result = super.toString()+"tasks.Epic{" +
-                "idSubTask=" + idSubTask +'}';
+        String result = super.toString() + "tasks.Epic{" +
+                "idSubTask=" + idSubTask + '}';
         return result;
     }
 }

@@ -22,17 +22,17 @@ public class Subtask extends Task {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Subtask subTask = (Subtask) obj;
-        return (idEpic == subTask.idEpic)&&super.equals(obj);
+        return (idEpic == subTask.idEpic) && super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),idEpic);
+        return Objects.hash(super.hashCode(), idEpic);
     }
 
     @Override
     public String toString() {
-        String result =super.toString()+ "tasks.Subtask{" +
+        String result = super.toString() + "tasks.Subtask{" +
                 "idEpic='" + idEpic + '\'' + '}';
         return result;
     }

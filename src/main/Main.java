@@ -1,13 +1,14 @@
 package main;
 
+import manager.Managers;
+import manager.TaskManager;
 import tasks.Subtask;
-import manager.Manager;
 import tasks.Epic;
 import tasks.Task;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
         manager.objectTask(new Task("Переезд", "Собрать коробки"));
         manager.objectTask(new Task("Накормить собаку", "Утром и вечером"));
         manager.objectEpic(new Epic("Поменять работу", "Чтобы больше была зарплата"));
@@ -25,31 +26,29 @@ public class Main {
             System.out.println(i);
         }
         System.out.println();
-        manager.updateTask(0, new Task("Переезд заграницу", "Куда-то"), Task.Status.IN_PROGRESS);
-        manager.updateSubTask(3, new Subtask("Сбежать с работы", "Срочно"), Task.Status.IN_PROGRESS);
-        manager.updateEpic(2, new Epic("Накормить кошку", "Днем"));
-        for (Object i : manager.writeTask()) {
-            System.out.println(i);
-        }
-        for (Object i : manager.writeEpic()) {
-            System.out.println(i);
-        }
-        for (Object i : manager.writeSubTask()) {
-            System.out.println(i);
-        }
-        System.out.println();
-        manager.removeSubTaskEpicIdentifier(3);
-        manager.removeTaskIdentifier(0);
-        manager.removeEpicIdentifier(2);
-        for (Object i : manager.writeTask()) {
-            System.out.println(i);
-        }
-        for (Object i : manager.writeEpic()) {
-            System.out.println(i);
-        }
-        for (Object i : manager.writeSubTask()) {
-            System.out.println(i);
-        }
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getEpic(2);
+        System.out.println(manager.getHistory());
+        manager.getEpic(5);
+        System.out.println(manager.getHistory());
+        manager.getSubtask(3);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
+        manager.getTask(1);
+        System.out.println(manager.getHistory());
+        manager.getTask(0);
+        System.out.println(manager.getHistory());
     }
-
 }
