@@ -37,6 +37,10 @@ public class Task {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -55,12 +59,12 @@ public class Task {
 
     @Override
     public String toString() {
-        String result = "tasks.Task{" +
+        return "tasks.Task{" +
                 "nameTask='" + nameTask + '\'' +
                 ", descriptionTask='" + descriptionTask + '\'' +
                 ", id='" + id + '\'' +
                 ", statusTask='" + statusTask + '\'' +
                 '}';
-        return result;
+
     }
 }
