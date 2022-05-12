@@ -200,6 +200,15 @@ public class InMemoryTaskManager implements TaskManager {
         return subTask;
     }
 
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
+    }
+
+    //создание идентификатора
+    private int generateId() {
+        return numberTask = numberTask + 1;
+    }
 
     //замена статуса эпика после замены или удаления подзадачи этого эпика
     private void statusEpic(int idEpicStatus) {
@@ -220,14 +229,4 @@ public class InMemoryTaskManager implements TaskManager {
             epicHashMap.get(idEpicStatus).setStatusTask(Task.Status.IN_PROGRESS);
         }
     }
-
-    //создание идентификатора
-    private int generateId() {
-        return numberTask = numberTask + 1;
-    }
-
-    public List<Task> getHistory() {
-        return historyManager.getHistory();
-    }
-
 }
