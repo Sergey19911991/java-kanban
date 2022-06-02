@@ -19,7 +19,7 @@ public class Main {
         for (Object i : manager.writeTask()) {
             System.out.println(i);
         }
-        for (Object i : manager.writeEpic()) {
+       for (Object i : manager.writeEpic()) {
             System.out.println(i);
         }
         for (Object i : manager.writeSubTask()) {
@@ -28,7 +28,9 @@ public class Main {
         System.out.println();
         manager.getTask(1);
         System.out.println(manager.getHistory());
-        manager.getEpic(6);
+       manager.getTask(1);
+        System.out.println(manager.getHistory());
+       manager.getEpic(6);
         System.out.println(manager.getHistory());
         manager.getSubtask(4);
         System.out.println(manager.getHistory());

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    public static Map<Integer, Node> nodeHistory = new HashMap<>();
+    private Map<Integer, Node> nodeHistory = new HashMap<>();
     private Node head;
     private Node tail;
     private int size = 0;
@@ -32,7 +32,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         nodeHistory.put(task.getId(), linkLast(task));
     }
 
-    public Node linkLast(Task element) {
+    private Node linkLast(Task element) {
         final Node oldTail = tail;
         final Node newNode = new Node(oldTail, element, null);
         tail = newNode;
@@ -46,7 +46,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
 
-    public List<Task> getTasks() {
+    private List<Task> getTasks() {
         List<Task> taskHistory = new ArrayList<>();
         Node a = head;
         int i = 1;
@@ -58,29 +58,28 @@ public class InMemoryHistoryManager implements HistoryManager {
         return taskHistory;
     }
 
-    public void removeNode(Node task) {
+    private void removeNode(Node task) {
         if (task.prev == null) {
-            task.next.prev = null;
             head = task.next;
-            --size;
-        } else if (task.next == null) {
-            task.prev.next = null;
-            tail = task.prev;
-            --size;
         } else {
-            task.prev.next = task.next;
-            task.next.prev = task.prev;
-            --size;
+            task.prev.next=task.next;
         }
+
+        if (task.next == null) {
+            tail = task.prev;
+        } else {
+            task.next.prev=task.prev;
+        }
+            --size;
     }
 }
 
 class Node {
-    public Object data;
-    public Node next;
-    public Node prev;
+    Object data;
+    Node next;
+    Node prev;
 
-    public Node(Node prev, Object data, Node next) {
+     Node(Node prev, Object data, Node next) {
         this.data = data;
         this.next = next;
         this.prev = prev;
