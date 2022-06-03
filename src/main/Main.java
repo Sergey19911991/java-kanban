@@ -30,7 +30,7 @@ public class Main {
         System.out.println(manager.getHistory());
        manager.getTask(1);
         System.out.println(manager.getHistory());
-       manager.getEpic(6);
+       manager.getEpic(3);
         System.out.println(manager.getHistory());
         manager.getSubtask(4);
         System.out.println(manager.getHistory());
@@ -42,5 +42,8 @@ public class Main {
         System.out.println(manager.getHistory());
         manager.getTask(1);
         System.out.println(manager.getHistory());
+        manager.removeEpicIdentifier(3);
+        System.out.println(manager.getHistory());
+
     }
 }

@@ -55,6 +55,7 @@ public class InMemoryTaskManager implements TaskManager {
     // Удаление задачи по идентификатору
     @Override
     public void removeTaskIdentifier(int identifier) {
+        historyManager.remove(taskHashMap.get(identifier).getId());
         taskHashMap.remove(identifier);
     }
 
@@ -96,8 +97,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicIdentifier(int identifier) {
         for (Integer id : epicHashMap.get(identifier).getIdSubTask()) {
+            historyManager.remove(id);
             subTaskHashMap.remove(id);
         }
+        historyManager.remove(epicHashMap.get(identifier).getId());
         epicHashMap.remove(identifier);
     }
 
@@ -179,6 +182,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubTaskEpicIdentifier(int identifier) {
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
+        historyManager.remove(subTaskHashMap.get(identifier).getId());
         subTaskHashMap.remove(identifier);
         int k = 0;
         for (int i = 0; i < epicHashMap.get(numberEpic).getIdSubTask().size(); i++) {
