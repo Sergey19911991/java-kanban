@@ -4,9 +4,16 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.File;
 import java.util.List;
 
 public interface TaskManager {
+    List<Integer> fromStringHistory(String value);
+
+    void fromString(String value);
+
+    FileBackedTasksManager loadFromFile(File file);
+
     void objectTask(Task task);
 
     List<Task> writeTask();
