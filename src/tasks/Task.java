@@ -8,6 +8,10 @@ public class Task {
     private int id;
     private Status statusTask;
 
+    public enum Type {
+        TASK, EPIC, SUBTASK
+    }
+
     public enum Status {
         NEW, IN_PROGRESS, DONE
     }

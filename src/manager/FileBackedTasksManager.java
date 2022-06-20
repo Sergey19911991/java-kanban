@@ -1,25 +1,22 @@
 package manager;
 
-import java.io.IOException;
+import java.io.*;
 
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.Writer;
-import java.io.FileWriter;
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    File file;
+    private File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
-    }
-
-    public enum Type {
-        TASK, EPIC, SUBTASK
     }
 
     public void save() {
@@ -43,18 +40,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.write(toString(historyManager));
             fileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException("Произошла проблема с сохранением в файл FileBackedTasksManager"
+                    + e.getMessage());
         }
     }
 
-    String toString(HistoryManager manager) {
+
+    private String toString(HistoryManager manager) {
         StringBuilder historyId = new StringBuilder();
         for (Task i : manager.getHistory()) {
             historyId.append(i.getId());
             historyId.append(", ");
         }
-        String historyIdString = historyId.toString();
-        return historyIdString;
+        return historyId.toString();
     }
 
 
@@ -98,16 +96,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
 
-    String toString(Task task) {
+    private String toString(Task task) {
         String stringTask = task.getId() + ", ";
         if (taskHashMap.containsValue(task)) {
-            stringTask = stringTask + Type.TASK + ", ";
+            stringTask = stringTask + Task.Type.TASK + ", ";
         }
         if (epicHashMap.containsValue(task)) {
-            stringTask = stringTask + Type.EPIC + ", ";
+            stringTask = stringTask + Task.Type.EPIC + ", ";
         }
         if (subTaskHashMap.containsValue(task)) {
-            stringTask = stringTask + Type.SUBTASK + ", ";
+            stringTask = stringTask + Task.Type.SUBTASK + ", ";
         }
         stringTask = stringTask + task.getNameTask() + ", " + task.getStatusTask() + ", " +
                 task.getDescriptionTask() + ", ";
@@ -117,11 +115,64 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringTask;
     }
 
+    public FileBackedTasksManager loadFromFile(File file) {
+        if (file.isFile()) {
+            String historyFile = null;
+            try {
+                historyFile = Files.readString(Path.of(file.getAbsolutePath()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String[] historyFile1 = historyFile.split(System.lineSeparator());
+            for (int i = 1; i < historyFile1.length; i++) {
+                if (!historyFile1[i].isEmpty()) {
+                    fromString(historyFile1[i]);
+                } else {
+                    for (Integer j : fromStringHistory(historyFile1[i + 1])) {
+                        if (taskHashMap.containsKey(j)) {
+                            getTask(j);
+                        } else if (epicHashMap.containsKey(j)) {
+                            getEpic(j);
+                        } else if (subTaskHashMap.containsKey(j)) {
+                            getSubtask(j);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return new FileBackedTasksManager(file);
+    }
+
+    public void fromString(String value) {
+        String[] split = value.split(", ");
+        if (Task.Type.valueOf(split[1]).equals(Task.Type.SUBTASK)) {
+            objectSubTask(new Subtask(split[2], split[4]), Integer.parseInt(split[5]));
+            subTaskHashMap.get(Integer.parseInt(split[0])).setStatusTask(Task.Status.valueOf(split[3]));
+        }
+        if (Task.Type.valueOf(split[1]).equals(Task.Type.TASK)) {
+            objectTask(new Task(split[2], split[4]));
+            taskHashMap.get(Integer.parseInt(split[0])).setStatusTask(Task.Status.valueOf(split[3]));
+        }
+        if (Task.Type.valueOf(split[1]).equals(Task.Type.EPIC)) {
+            objectEpic(new Epic(split[2], split[4]));
+            epicHashMap.get(Integer.parseInt(split[0])).setStatusTask(Task.Status.valueOf(split[3]));
+        }
+    }
+
+    public List<Integer> fromStringHistory(String value) {
+        List<Integer> history = new ArrayList<>();
+        String[] split = value.split(", ");
+        for (int i = 0; i < split.length; i++) {
+            history.add(Integer.parseInt(split[i]));
+        }
+        return history;
+    }
+
 
     public static void main(String[] args) {
-        File file = new File("C://Users//User//dev//java-kanban", "fileWriter.txt");
+        File file = new File("fileWriter.txt");
         TaskManager manager1 = Managers.getFileBackedTasksManager(file);
-        manager1.loadFromFile(file);
 
         manager1.objectTask(new Task("Переезд", "Собрать коробки"));
         manager1.objectEpic(new Epic("Поменять работу", "Чтобы больше была зарплата"));
@@ -129,6 +180,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager1.getSubtask(3);
         manager1.getTask(1);
         manager1.getEpic(2);
+
 
         TaskManager manager2 = Managers.getFileBackedTasksManager(file);
         manager2.loadFromFile(file);
@@ -146,4 +198,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 }
 
+class ManagerSaveException extends RuntimeException {
+    public ManagerSaveException() {
+    }
 
+    public ManagerSaveException(final String message) {
+        super(message);
+    }
+}

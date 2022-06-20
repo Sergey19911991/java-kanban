@@ -4,28 +4,23 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class InMemoryTaskManager implements TaskManager {
+public abstract class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> taskHashMap = new HashMap<>();
     protected final HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     protected final HashMap<Integer, Subtask> subTaskHashMap = new HashMap<>();
-
 
     private int numberTask;
 
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
+
     //Создание задачи
     @Override
-    public void objectTask(Task task) {
+    public void objectTask(Task task)  {
         task.setStatusTask(Task.Status.NEW);
         task.setId(generateId());
         taskHashMap.put(task.getId(), task);
@@ -75,7 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //создание эпика
     @Override
-    public void objectEpic(Epic epic) {
+    public void objectEpic(Epic epic)  {
         epic.setStatusTask(Task.Status.NEW);
         epic.setId(generateId());
         epicHashMap.put(epic.getId(), epic);
@@ -111,7 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //вывод эпика по идентификатору
     @Override
-    public Epic getEpic(int identifier) {
+    public Epic getEpic(int identifier)  {
         Epic epic = epicHashMap.get(identifier);
         if (epic != null) {
             historyManager.add(epic);
@@ -237,60 +232,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epicHashMap.get(idEpicStatus).setStatusTask(Task.Status.IN_PROGRESS);
         }
-    }
-
-    public FileBackedTasksManager loadFromFile(File file) {
-        try {
-            if (file.isFile()) {
-                String historyFile = Files.readString(Path.of(file.getAbsolutePath()));
-                String[] historyFile1 = historyFile.split(System.lineSeparator());
-                for (int i = 1; i < historyFile1.length; i++) {
-                    if (!historyFile1[i].isEmpty()) {
-                        System.out.println(historyFile1[i]);
-                        fromString(historyFile1[i]);
-                    } else {
-                        for (Integer j : fromStringHistory(historyFile1[i + 1])) {
-                            if (taskHashMap.containsKey(j)) {
-                                getTask(j);
-                            } else if (epicHashMap.containsKey(j)) {
-                                getEpic(j);
-                            } else if (subTaskHashMap.containsKey(j)) {
-                                getSubtask(j);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new FileBackedTasksManager(file);
-    }
-
-    public void fromString(String value) {
-        String[] split = value.split(", ");
-        if (FileBackedTasksManager.Type.valueOf(split[1]).equals(FileBackedTasksManager.Type.SUBTASK)) {
-            objectSubTask(new Subtask(split[2], split[4]), Integer.parseInt(split[5]));
-            subTaskHashMap.get(Integer.parseInt(split[0])).setStatusTask(Task.Status.valueOf(split[3]));
-        }
-        if (FileBackedTasksManager.Type.valueOf(split[1]).equals(FileBackedTasksManager.Type.TASK)) {
-            objectTask(new Task(split[2], split[4]));
-            taskHashMap.get(Integer.parseInt(split[0])).setStatusTask(Task.Status.valueOf(split[3]));
-        }
-        if (FileBackedTasksManager.Type.valueOf(split[1]).equals(FileBackedTasksManager.Type.EPIC)) {
-            objectEpic(new Epic(split[2], split[4]));
-            epicHashMap.get(Integer.parseInt(split[0])).setStatusTask(Task.Status.valueOf(split[3]));
-        }
-    }
-
-    public List<Integer> fromStringHistory(String value) {
-        List<Integer> history = new ArrayList<>();
-        String[] split = value.split(", ");
-        for (int i = 0; i < split.length; i++) {
-            history.add(Integer.parseInt(split[i]));
-        }
-        return history;
     }
 
 }

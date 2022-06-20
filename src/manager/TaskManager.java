@@ -14,7 +14,7 @@ public interface TaskManager {
 
     FileBackedTasksManager loadFromFile(File file);
 
-    void objectTask(Task task);
+    void objectTask(Task task) ;
 
     List<Task> writeTask();
 
@@ -26,7 +26,7 @@ public interface TaskManager {
 
     void updateTask(int identifier, Task task, Task.Status newStatus);
 
-    void objectEpic(Epic epic);
+    void objectEpic(Epic epic) ;
 
     List<Epic> writeEpic();
 
@@ -34,7 +34,7 @@ public interface TaskManager {
 
     void removeEpicIdentifier(int identifier);
 
-    Epic getEpic(int identifier);
+    Epic getEpic(int identifier) ;
 
     void updateEpic(int identifier, Epic epic);
 

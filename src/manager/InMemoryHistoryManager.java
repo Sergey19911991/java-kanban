@@ -63,15 +63,15 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task.prev == null) {
             head = task.next;
         } else {
-            task.prev.next=task.next;
+            task.prev.next = task.next;
         }
 
         if (task.next == null) {
             tail = task.prev;
         } else {
-            task.next.prev=task.prev;
+            task.next.prev = task.prev;
         }
-            --size;
+        --size;
     }
 }
 
@@ -80,7 +80,7 @@ class Node {
     Node next;
     Node prev;
 
-     Node(Node prev, Object data, Node next) {
+    Node(Node prev, Object data, Node next) {
         this.data = data;
         this.next = next;
         this.prev = prev;
