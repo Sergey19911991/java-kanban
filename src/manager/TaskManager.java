@@ -3,18 +3,18 @@ package manager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.Enum;
 
 import java.io.File;
 import java.util.List;
 
 public interface TaskManager {
-    List<Integer> fromStringHistory(String value);
 
     void fromString(String value);
 
     FileBackedTasksManager loadFromFile(File file);
 
-    void objectTask(Task task) ;
+    void objectTask(Task task);
 
     List<Task> writeTask();
 
@@ -24,9 +24,9 @@ public interface TaskManager {
 
     void removeTaskIdentifier(int identifier);
 
-    void updateTask(int identifier, Task task, Task.Status newStatus);
+    void updateTask(int identifier, Task task, Enum.Status newStatus);
 
-    void objectEpic(Epic epic) ;
+    void objectEpic(Epic epic);
 
     List<Epic> writeEpic();
 
@@ -34,7 +34,7 @@ public interface TaskManager {
 
     void removeEpicIdentifier(int identifier);
 
-    Epic getEpic(int identifier) ;
+    Epic getEpic(int identifier);
 
     void updateEpic(int identifier, Epic epic);
 
@@ -44,7 +44,7 @@ public interface TaskManager {
 
     void clearSubTask();
 
-    void updateSubTask(int identifier, Subtask subtask, Task.Status newStatus);
+    void updateSubTask(int identifier, Subtask subtask, Enum.Status newStatus);
 
     Subtask getSubtask(int identifier);
 

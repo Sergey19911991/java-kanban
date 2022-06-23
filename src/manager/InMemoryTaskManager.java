@@ -3,6 +3,7 @@ package manager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.Enum;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public abstract class InMemoryTaskManager implements TaskManager {
 
     //Создание задачи
     @Override
-    public void objectTask(Task task)  {
-        task.setStatusTask(Task.Status.NEW);
+    public void objectTask(Task task) {
+        task.setStatusTask(Enum.Status.NEW);
         task.setId(generateId());
         taskHashMap.put(task.getId(), task);
     }
@@ -61,7 +62,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
 
     // Замена задачи
     @Override
-    public void updateTask(int identifier, Task task, Task.Status newStatus) {
+    public void updateTask(int identifier, Task task, Enum.Status newStatus) {
         taskHashMap.remove(identifier);
         taskHashMap.put(identifier, task);
         task.setStatusTask(newStatus);
@@ -70,8 +71,8 @@ public abstract class InMemoryTaskManager implements TaskManager {
 
     //создание эпика
     @Override
-    public void objectEpic(Epic epic)  {
-        epic.setStatusTask(Task.Status.NEW);
+    public void objectEpic(Epic epic) {
+        epic.setStatusTask(Enum.Status.NEW);
         epic.setId(generateId());
         epicHashMap.put(epic.getId(), epic);
     }
@@ -106,7 +107,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
 
     //вывод эпика по идентификатору
     @Override
-    public Epic getEpic(int identifier)  {
+    public Epic getEpic(int identifier) {
         Epic epic = epicHashMap.get(identifier);
         if (epic != null) {
             historyManager.add(epic);
@@ -117,7 +118,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     //замена эпика
     @Override
     public void updateEpic(int identifier, Epic epic) {
-        Task.Status status = epicHashMap.get(identifier).getStatusTask();
+        Enum.Status status = epicHashMap.get(identifier).getStatusTask();
         List<Integer> idSubtask1;
         idSubtask1 = epicHashMap.get(identifier).getIdSubTask();
         epicHashMap.remove(identifier);
@@ -132,7 +133,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     public void objectSubTask(Subtask subTask, int identifier) {
         subTask.setId(generateId());
         subTaskHashMap.put(subTask.getId(), subTask);
-        subTask.setStatusTask(Task.Status.NEW);
+        subTask.setStatusTask(Enum.Status.NEW);
         subTask.setIdEpic(identifier);
         epicHashMap.get(identifier).getIdSubTask().add(subTask.getId());
     }
@@ -152,13 +153,13 @@ public abstract class InMemoryTaskManager implements TaskManager {
     public void clearSubTask() {
         subTaskHashMap.clear();
         for (Integer keySetEpic : epicHashMap.keySet()) {
-            epicHashMap.get(keySetEpic).setStatusTask(Task.Status.NEW);
+            epicHashMap.get(keySetEpic).setStatusTask(Enum.Status.NEW);
         }
     }
 
     //замена подзадачи
     @Override
-    public void updateSubTask(int identifier, Subtask subtask, Task.Status newStatus) {
+    public void updateSubTask(int identifier, Subtask subtask, Enum.Status newStatus) {
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
         subTaskHashMap.remove(identifier);
         subTaskHashMap.put(identifier, subtask);
@@ -219,18 +220,18 @@ public abstract class InMemoryTaskManager implements TaskManager {
         int numberNew = 0;
         int numberDone = 0;
         for (Integer id : epicHashMap.get(idEpicStatus).getIdSubTask()) {
-            if (subTaskHashMap.get(id).getStatusTask().equals(Task.Status.DONE)) {
+            if (subTaskHashMap.get(id).getStatusTask().equals(Enum.Status.DONE)) {
                 numberDone = numberDone + 1;
-            } else if (subTaskHashMap.get(id).getStatusTask().equals(Task.Status.NEW)) {
+            } else if (subTaskHashMap.get(id).getStatusTask().equals(Enum.Status.NEW)) {
                 numberNew = numberNew + 1;
             }
         }
         if (numberDone == epicHashMap.get(idEpicStatus).getIdSubTask().size()) {
-            epicHashMap.get(idEpicStatus).setStatusTask(Task.Status.DONE);
+            epicHashMap.get(idEpicStatus).setStatusTask(Enum.Status.DONE);
         } else if (numberNew == epicHashMap.get(idEpicStatus).getIdSubTask().size()) {
-            epicHashMap.get(idEpicStatus).setStatusTask(Task.Status.NEW);
+            epicHashMap.get(idEpicStatus).setStatusTask(Enum.Status.NEW);
         } else {
-            epicHashMap.get(idEpicStatus).setStatusTask(Task.Status.IN_PROGRESS);
+            epicHashMap.get(idEpicStatus).setStatusTask(Enum.Status.IN_PROGRESS);
         }
     }
 

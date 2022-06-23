@@ -6,21 +6,13 @@ public class Task {
     private String nameTask;
     private String descriptionTask;
     private int id;
-    private Status statusTask;
+    private Enum.Status statusTask;
 
-    public enum Type {
-        TASK, EPIC, SUBTASK
-    }
-
-    public enum Status {
-        NEW, IN_PROGRESS, DONE
-    }
-
-    public Status getStatusTask() {
+    public Enum.Status getStatusTask() {
         return statusTask;
     }
 
-    public void setStatusTask(Status statusTask) {
+    public void setStatusTask(Enum.Status statusTask) {
         this.statusTask = statusTask;
     }
 
