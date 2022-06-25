@@ -5,14 +5,11 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.Enum;
 
-import java.io.File;
 import java.util.List;
 
 public interface TaskManager {
 
    void fromString(String value);
-
-    //FileBackedTasksManager loadFromFile(File file);
 
     void objectTask(Task task);
 
