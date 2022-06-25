@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface TaskManager {
 
-    void fromString(String value);
+   void fromString(String value);
 
-    FileBackedTasksManager loadFromFile(File file);
+    //FileBackedTasksManager loadFromFile(File file);
 
     void objectTask(Task task);
 

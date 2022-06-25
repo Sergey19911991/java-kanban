@@ -48,7 +48,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             try {
                 fileWriter.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ManagerSaveException("Произошла при закрытии потока записи"
+                        + e.getMessage());
             }
         }
     }
@@ -66,7 +67,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void objectTask(Task task) {
-        super.objectTask(task);
+       super.objectTask(task);
         save();
     }
 
@@ -158,7 +159,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringTask;
     }
 
-    public FileBackedTasksManager loadFromFile(File file) {
+    public static FileBackedTasksManager loadFromFile(File file) {
         String historyFile = null;
         try {
             historyFile = Files.readString(Path.of(file.getAbsolutePath()));
@@ -166,24 +167,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             e.printStackTrace();
         }
         String[] historyFile1 = historyFile.split(System.lineSeparator());
+        FileBackedTasksManager newTaskManager = new FileBackedTasksManager(file);
         for (int i = 1; i < historyFile1.length; i++) {
             if (!historyFile1[i].isEmpty()) {
-                fromString(historyFile1[i]);
+                newTaskManager.fromString(historyFile1[i]);
             } else {
 
                 for (Integer j : fromStringHistory(historyFile1[i + 1])) {
-                    if (taskHashMap.containsKey(j)) {
-                        getTask(j);
-                    } else if (epicHashMap.containsKey(j)) {
-                        getEpic(j);
-                    } else if (subTaskHashMap.containsKey(j)) {
-                        getSubtask(j);
+                    if (newTaskManager.taskHashMap.containsKey(j)) {
+                        newTaskManager.getTask(j);
+                    } else if (newTaskManager.epicHashMap.containsKey(j)) {
+                        newTaskManager.getEpic(j);
+                    } else if (newTaskManager.subTaskHashMap.containsKey(j)) {
+                        newTaskManager.getSubtask(j);
                     }
                 }
                 i++;
             }
         }
-        return new FileBackedTasksManager(file);
+        return newTaskManager;
     }
 
     public void fromString(String value) {
@@ -237,18 +239,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager1.getEpic(2);
 
 
-        TaskManager manager2 = Managers.getDefault().loadFromFile(file);
-        manager2.loadFromFile(file);
-        for (Task i : manager2.writeTask()) {
+        FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(file);
+        for (Task i : newTaskManager .writeTask()) {
             System.out.println(i);
         }
-        for (Epic i : manager2.writeEpic()) {
+        for (Epic i : newTaskManager .writeEpic()) {
             System.out.println(i);
         }
-        for (Subtask i : manager2.writeSubTask()) {
+        for (Subtask i : newTaskManager .writeSubTask()) {
             System.out.println(i);
         }
-        System.out.println(manager2.getHistory());
+        System.out.println(newTaskManager .getHistory());
     }
 
 }
