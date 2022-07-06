@@ -5,9 +5,8 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.Enum;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 public abstract class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> taskHashMap = new HashMap<>();
@@ -18,6 +17,17 @@ public abstract class InMemoryTaskManager implements TaskManager {
 
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
+    Comparator<Task> taskComp = new Comparator<Task>() {
+        @Override
+        public int compare(Task o1, Task o2) {
+            return o1.getStartTime().compareTo(o2.getStartTime());
+
+        }
+    };
+    protected final TreeSet<Task> treeTask = new TreeSet(taskComp);
+    protected final TreeSet<Task> treeSubTask = new TreeSet(taskComp);
+
+
 
     //Создание задачи
     @Override
@@ -25,6 +35,8 @@ public abstract class InMemoryTaskManager implements TaskManager {
         task.setStatusTask(Enum.Status.NEW);
         task.setId(generateId());
         taskHashMap.put(task.getId(), task);
+        validatorTimeTasks(task);
+        treeTask.add(task);
     }
 
     //Вывод всех задач
@@ -41,6 +53,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     @Override
     public void clearTask() {
         taskHashMap.clear();
+        treeTask.clear();
     }
 
     //Вывод задачи по идентификатору
@@ -56,6 +69,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     // Удаление задачи по идентификатору
     @Override
     public void removeTaskIdentifier(int identifier) {
+        treeTask.remove(taskHashMap.get(identifier));
         historyManager.remove(taskHashMap.get(identifier).getId());
         taskHashMap.remove(identifier);
     }
@@ -63,6 +77,9 @@ public abstract class InMemoryTaskManager implements TaskManager {
     // Замена задачи
     @Override
     public void updateTask(int identifier, Task task, Enum.Status newStatus) {
+        treeTask.remove(taskHashMap.get(identifier));
+        validatorTimeTasks(task);
+        treeTask.add(task);
         taskHashMap.remove(identifier);
         taskHashMap.put(identifier, task);
         task.setStatusTask(newStatus);
@@ -136,6 +153,15 @@ public abstract class InMemoryTaskManager implements TaskManager {
         subTask.setStatusTask(Enum.Status.NEW);
         subTask.setIdEpic(identifier);
         epicHashMap.get(identifier).getIdSubTask().add(subTask.getId());
+        long sumDuration=0;
+        for(Integer i:epicHashMap.get(identifier).getIdSubTask()){
+            sumDuration = sumDuration + subTaskHashMap.get(i).getDuration();
+        }
+        epicHashMap.get(identifier).setDuration(sumDuration);
+        validatorSubTimeTasks(subTask);
+        treeSubTask.add(subTask);
+        epicHashMap.get(identifier).setStartTime(treeSubTask.first().getStartTime());
+        epicHashMap.get(identifier).setEndTime(treeSubTask.last().getEndTime());
     }
 
     //вывод всех подзадач
@@ -154,12 +180,20 @@ public abstract class InMemoryTaskManager implements TaskManager {
         subTaskHashMap.clear();
         for (Integer keySetEpic : epicHashMap.keySet()) {
             epicHashMap.get(keySetEpic).setStatusTask(Enum.Status.NEW);
+            epicHashMap.get(keySetEpic).setDuration(0);
+            epicHashMap.get(keySetEpic).getIdSubTask().clear();
+            epicHashMap.get(keySetEpic).setEndTime(null);
+            epicHashMap.get(keySetEpic).setStartTime(null);
         }
+        treeSubTask.clear();
     }
 
     //замена подзадачи
     @Override
     public void updateSubTask(int identifier, Subtask subtask, Enum.Status newStatus) {
+        treeSubTask.remove(subTaskHashMap.get(identifier));
+        validatorSubTimeTasks(subtask);
+        treeSubTask.add(subtask);
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
         subTaskHashMap.remove(identifier);
         subTaskHashMap.put(identifier, subtask);
@@ -167,6 +201,13 @@ public abstract class InMemoryTaskManager implements TaskManager {
         subtask.setIdEpic(numberEpic);
         statusEpic(numberEpic);
         subtask.setId(identifier);
+        epicHashMap.get(numberEpic).setStartTime(treeSubTask.first().getStartTime());
+        long sumDuration=0;
+        for(Integer i:epicHashMap.get(numberEpic).getIdSubTask()){
+            sumDuration = sumDuration + subTaskHashMap.get(i).getDuration();
+        }
+        epicHashMap.get(numberEpic).setDuration(sumDuration);
+        epicHashMap.get(numberEpic).setEndTime(treeSubTask.last().getEndTime());
     }
 
     // вывод подзадачи по идентификатору
@@ -182,8 +223,13 @@ public abstract class InMemoryTaskManager implements TaskManager {
     //удаление подзадачи по идентификатору
     @Override
     public void removeSubTaskEpicIdentifier(int identifier) {
+        treeSubTask.remove(subTaskHashMap.get(identifier));
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
         historyManager.remove(subTaskHashMap.get(identifier).getId());
+        epicHashMap.get(numberEpic).setDuration(epicHashMap.get(numberEpic).getDuration()-subTaskHashMap.get(identifier)
+                .getDuration());
+        epicHashMap.get(numberEpic).setStartTime(treeSubTask.first().getStartTime());
+        epicHashMap.get(numberEpic).setEndTime(treeSubTask.last().getEndTime());
         subTaskHashMap.remove(identifier);
         int k = 0;
         for (int i = 0; i < epicHashMap.get(numberEpic).getIdSubTask().size(); i++) {
@@ -235,4 +281,34 @@ public abstract class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public TreeSet getPrioritizedTasks(){
+        return treeTask;
+    }
+
+
+    public TreeSet getPrioritizedSubTasks(){
+        return treeSubTask;
+    }
+
+    private void validatorTimeTasks(Task task) {
+        for (Task priorityTask : treeTask) {
+            if ((task.getStartTime().isAfter(priorityTask.getStartTime()) &&
+                    task.getStartTime().isBefore(priorityTask.getEndTime()))||(task.getEndTime().isAfter(priorityTask.getStartTime()) &&
+                    task.getEndTime().isBefore(priorityTask.getEndTime()))) {
+                throw new IllegalArgumentException("Даты пересекаются у задач с номерами: " + priorityTask.getId() + " и " + task.getId());
+            }
+        }
+    }
+
+    private void validatorSubTimeTasks(Subtask subtask) {
+        for (Task priorityTask : treeSubTask) {
+            if ((subtask.getStartTime().isAfter(priorityTask.getStartTime()) &&
+                    subtask.getStartTime().isBefore(priorityTask.getEndTime()))||(subtask.getEndTime().isAfter(priorityTask.getStartTime()) &&
+                    subtask.getEndTime().isBefore(priorityTask.getEndTime()))) {
+                throw new IllegalArgumentException("Даты пересекаются у подзадач с номерами: " + priorityTask.getId() + " и " + subtask.getId());
+            }
+        }
+    }
+
 }
+

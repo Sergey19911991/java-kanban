@@ -25,7 +25,14 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         super.addTask();
     }
 
+    @Test
+    public void addEpic(){
+        super.addNewEpic();
+    }
 
-
+    @Test
+    public void addSubTask(){
+        super.addTask();
+    }
 
 }

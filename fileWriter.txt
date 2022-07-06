@@ -1,7 +1,6 @@
-id,type,name,status,description,epic
-4, TASK, Накормить собаку, DONE, Утром и вечером, 
-5, TASK, Накормить кота, NEW, Утром, 
-2, EPIC, Поменять работу, NEW, Чтобы больше была зарплата, 
-3, SUBTASK, Искать работу, NEW, Всеми способами, 2, 
+id, type, name, status, description, startTime, duration, epic
+1, EPIC, Epic, IN_PROGRESS, Epic, 2010-01-01T03:00, 140, 
+2, SUBTASK, Subtask, NEW, Subtask, 2012-01-01T03:00, 80, 1, 
+3, SUBTASK, Subtask, DONE, Subtask, 2010-01-01T03:00, 60, 1, 
 
-3, 4, 2, 
+1, 

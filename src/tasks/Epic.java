@@ -3,12 +3,14 @@ package tasks;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.time.LocalDateTime;
 
 public class Epic extends Task {
     private List<Integer> idSubTask = new ArrayList<>();
+    private LocalDateTime endTime;
 
-    public Epic(String nameTask, String descriptionTask) {
-        super(nameTask, descriptionTask);
+    public Epic(String nameTask, String descriptionTask,LocalDateTime startTime,long duration) {
+        super(nameTask, descriptionTask,startTime,duration);
     }
 
     public void setIdSubTask(List<Integer> idSubTask) {
@@ -18,6 +20,11 @@ public class Epic extends Task {
     public List<Integer> getIdSubTask() {
         return idSubTask;
     }
+
+    public void setEndTime(LocalDateTime endTime){
+        this.endTime=endTime;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

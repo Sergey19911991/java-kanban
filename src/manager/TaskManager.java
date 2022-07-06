@@ -6,8 +6,12 @@ import tasks.Task;
 import tasks.Enum;
 
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
+   TreeSet getPrioritizedSubTasks();
+
+   TreeSet getPrioritizedTasks();
 
    void fromString(String value);
 
