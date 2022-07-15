@@ -17,11 +17,10 @@ public abstract class InMemoryTaskManager implements TaskManager {
 
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    private Comparator<Task> taskComp = (o1,o2)->o1.getStartTime().compareTo(o2.getStartTime());
+    private Comparator<Task> taskComp = (o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime());
 
     protected final TreeSet<Task> treeTask = new TreeSet(taskComp);
     protected final TreeSet<Task> treeSubTask = new TreeSet(taskComp);
-
 
 
     //Создание задачи
@@ -148,8 +147,8 @@ public abstract class InMemoryTaskManager implements TaskManager {
         subTask.setStatusTask(Enum.Status.NEW);
         subTask.setIdEpic(identifier);
         epicHashMap.get(identifier).getIdSubTask().add(subTask.getId());
-        long sumDuration=0;
-        for(Integer i:epicHashMap.get(identifier).getIdSubTask()){
+        long sumDuration = 0;
+        for (Integer i : epicHashMap.get(identifier).getIdSubTask()) {
             sumDuration = sumDuration + subTaskHashMap.get(i).getDuration();
         }
         epicHashMap.get(identifier).setDuration(sumDuration);
@@ -200,8 +199,8 @@ public abstract class InMemoryTaskManager implements TaskManager {
         statusEpic(numberEpic);
         subtask.setId(identifier);
         epicHashMap.get(numberEpic).setStartTime(treeSubTask.first().getStartTime());
-        long sumDuration=0;
-        for(Integer i:epicHashMap.get(numberEpic).getIdSubTask()){
+        long sumDuration = 0;
+        for (Integer i : epicHashMap.get(numberEpic).getIdSubTask()) {
             sumDuration = sumDuration + subTaskHashMap.get(i).getDuration();
         }
         epicHashMap.get(numberEpic).setDuration(sumDuration);
@@ -224,7 +223,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
         treeSubTask.remove(subTaskHashMap.get(identifier));
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
         historyManager.remove(subTaskHashMap.get(identifier).getId());
-        epicHashMap.get(numberEpic).setDuration(epicHashMap.get(numberEpic).getDuration()-subTaskHashMap.get(identifier)
+        epicHashMap.get(numberEpic).setDuration(epicHashMap.get(numberEpic).getDuration() - subTaskHashMap.get(identifier)
                 .getDuration());
         epicHashMap.get(numberEpic).setStartTime(treeSubTask.first().getStartTime());
         epicHashMap.get(numberEpic).setEndTime(treeSubTask.last().getEndTime());
@@ -279,7 +278,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public TreeSet getPrioritizedTasks(){
+    public TreeSet getPrioritizedTasks() {
         return treeTask;
     }
 
@@ -287,7 +286,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     private void validatorTimeTasks(Task task) {
         for (Task priorityTask : treeTask) {
             if ((task.getStartTime().isAfter(priorityTask.getStartTime()) &&
-                    task.getStartTime().isBefore(priorityTask.getEndTime()))||(task.getEndTime().isAfter(priorityTask.getStartTime()) &&
+                    task.getStartTime().isBefore(priorityTask.getEndTime())) || (task.getEndTime().isAfter(priorityTask.getStartTime()) &&
                     task.getEndTime().isBefore(priorityTask.getEndTime()))) {
                 throw new IllegalArgumentException("Даты пересекаются у задач с номерами: " + priorityTask.getId() + " и " + task.getId());
             }
@@ -297,7 +296,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     private void validatorSubTimeTasks(Subtask subtask) {
         for (Task priorityTask : treeSubTask) {
             if ((subtask.getStartTime().isAfter(priorityTask.getStartTime()) &&
-                    subtask.getStartTime().isBefore(priorityTask.getEndTime()))||(subtask.getEndTime().isAfter(priorityTask.getStartTime()) &&
+                    subtask.getStartTime().isBefore(priorityTask.getEndTime())) || (subtask.getEndTime().isAfter(priorityTask.getStartTime()) &&
                     subtask.getEndTime().isBefore(priorityTask.getEndTime()))) {
                 throw new IllegalArgumentException("Даты пересекаются у подзадач с номерами: " + priorityTask.getId() + " и " + subtask.getId());
             }

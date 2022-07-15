@@ -9,8 +9,8 @@ public class Epic extends Task {
     private List<Integer> idSubTask = new ArrayList<>();
     private LocalDateTime endTime;
 
-    public Epic(String nameTask, String descriptionTask,LocalDateTime startTime,long duration) {
-        super(nameTask, descriptionTask,startTime,duration);
+    public Epic(String nameTask, String descriptionTask, LocalDateTime startTime, long duration) {
+        super(nameTask, descriptionTask, startTime, duration);
     }
 
     public void setIdSubTask(List<Integer> idSubTask) {
@@ -21,11 +21,11 @@ public class Epic extends Task {
         return idSubTask;
     }
 
-    public void setEndTime(LocalDateTime endTime){
-        this.endTime=endTime;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 

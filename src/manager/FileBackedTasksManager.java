@@ -45,7 +45,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла проблема с сохранением в файл FileBackedTasksManager"
                     + e.getMessage());
-        } finally{
+        } finally {
             try {
                 fileWriter.close();
             } catch (IOException e) {
@@ -68,7 +68,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void objectTask(Task task) {
-       super.objectTask(task);
+        super.objectTask(task);
         save();
     }
 
@@ -125,13 +125,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void updateEpic(int identifier, Epic epic) {
-        super.updateEpic(identifier,epic);
+        super.updateEpic(identifier, epic);
         save();
     }
 
     @Override
     public void updateSubTask(int identifier, Subtask subtask, Enum.Status newStatus) {
-        super.updateSubTask(identifier,subtask,newStatus);
+        super.updateSubTask(identifier, subtask, newStatus);
         save();
     }
 
@@ -153,15 +153,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             stringTask = stringTask + Enum.Type.SUBTASK + ", ";
         }
         stringTask = stringTask + task.getNameTask() + ", " + task.getStatusTask() + ", " +
-                task.getDescriptionTask() + ", "+task.getStartTime()+", "+task.getDuration()+", ";
+                task.getDescriptionTask() + ", " + task.getStartTime() + ", " + task.getDuration() + ", ";
         if (subTaskHashMap.containsKey(task.getId())) {
             stringTask = stringTask + subTaskHashMap.get(task.getId()).getIdEpic() + ", ";
         }
         return stringTask;
     }
 
-   public static FileBackedTasksManager loadFromFile(File file) {
-        numberTask=0;
+    public static FileBackedTasksManager loadFromFile(File file) {
+        numberTask = 0;
         String historyFile = null;
         try {
             historyFile = Files.readString(Path.of(file.getAbsolutePath()));
@@ -192,7 +192,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void fromString(String value) {
         String[] split = value.split(", ");
         if (Enum.Type.valueOf(split[1]).equals(Enum.Type.TASK)) {
-            Task task = new Subtask(split[2], split[4],LocalDateTime.parse(split[5]),Long.parseLong(split[6]));
+            Task task = new Subtask(split[2], split[4], LocalDateTime.parse(split[5]), Long.parseLong(split[6]));
             task.setId(Integer.parseInt(split[0]));
             task.setStatusTask(Enum.Status.valueOf(split[3]));
             taskHashMap.put(Integer.parseInt(split[0]), task);
@@ -200,7 +200,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             numberTask++;
         }
         if (Enum.Type.valueOf(split[1]).equals(Enum.Type.SUBTASK)) {
-            Subtask subtask = new Subtask(split[2], split[4],LocalDateTime.parse(split[5]),Long.parseLong(split[6]));
+            Subtask subtask = new Subtask(split[2], split[4], LocalDateTime.parse(split[5]), Long.parseLong(split[6]));
             subtask.setId(Integer.parseInt(split[0]));
             subtask.setStatusTask(Enum.Status.valueOf(split[3]));
             subtask.setIdEpic(Integer.parseInt(split[7]));
@@ -211,9 +211,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             numberTask++;
         }
         if (Enum.Type.valueOf(split[1]).equals(Enum.Type.EPIC)) {
-           Epic epic = new Epic(split[2], split[4], null, Long.parseLong(split[6]));
-            if(!(split[5].equals("null"))) {
-                 epic = new Epic(split[2], split[4], LocalDateTime.parse(split[5]), Long.parseLong(split[6]));
+            Epic epic = new Epic(split[2], split[4], null, Long.parseLong(split[6]));
+            if (!(split[5].equals("null"))) {
+                epic = new Epic(split[2], split[4], LocalDateTime.parse(split[5]), Long.parseLong(split[6]));
             }
             epic.setId(Integer.parseInt(split[0]));
             epic.setStatusTask(Enum.Status.valueOf(split[3]));
@@ -222,7 +222,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-   public static List<Integer> fromStringHistory(String value) {
+    public static List<Integer> fromStringHistory(String value) {
         List<Integer> history = new ArrayList<>();
         String[] split = value.split(", ");
         for (int i = 0; i < split.length; i++) {
@@ -237,39 +237,34 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         TaskManager manager1 = Managers.getDefault();
 
 
-      manager1.objectEpic(new Epic("Поменять работу", "Чтобы больше была зарплата",null,0));
-        //FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(file);
-       //TaskManager manager2 = Managers.getDefault();
-       /* newTaskManager.objectEpic(new Epic("*******", "*******",null,0));
-        for (Epic i : newTaskManager .writeEpic()) {
-            System.out.println(i);
-        }*/
-      manager1.objectSubTask(new Subtask("Искать работу", "Всеми способами",LocalDateTime.of
-             (2010, 1, 1, 4, 0),80),1);
-       manager1.objectSubTask(new Subtask("Искать работу", "Всеми способами",LocalDateTime.of
-             (1999, 1, 1, 2, 0),80), 1);
-        manager1.objectTask(new Task("!!!!!", "&&&&&&",LocalDateTime.of
-                 (2010, 1, 1, 3, 0),0));
-      manager1.updateSubTask(2,new Subtask("Искать работу", "Всеми способами",LocalDateTime.of
-                (1999, 1, 1, 4, 0),80), Enum.Status.DONE);
-        manager1.updateSubTask(3,new Subtask("Искать работу", "Всеми способами",LocalDateTime.of
-                (1998, 1, 1, 3, 0),80), Enum.Status.DONE);
+        manager1.objectEpic(new Epic("Поменять работу", "Чтобы больше была зарплата", null, 0));
+
+        manager1.objectSubTask(new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
+                (2010, 1, 1, 4, 0), 80), 1);
+        manager1.objectSubTask(new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
+                (1999, 1, 1, 2, 0), 80), 1);
+        manager1.objectTask(new Task("!!!!!", "&&&&&&", LocalDateTime.of
+                (2010, 1, 1, 3, 0), 0));
+        manager1.updateSubTask(2, new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
+                (1999, 1, 1, 4, 0), 80), Enum.Status.DONE);
+        manager1.updateSubTask(3, new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
+                (1998, 1, 1, 3, 0), 80), Enum.Status.DONE);
         manager1.getTask(4);
         System.out.println(manager1.getHistory());
 
 
-       FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(file);
-        for (Task i : newTaskManager .writeTask()) {
+        FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(file);
+        for (Task i : newTaskManager.writeTask()) {
             System.out.println(i);
         }
-       /* for (Epic i : newTaskManager .writeEpic()) {
+        for (Epic i : newTaskManager.writeEpic()) {
             System.out.println(i);
         }
-        for (Subtask i : newTaskManager .writeSubTask()) {
+        for (Subtask i : newTaskManager.writeSubTask()) {
             System.out.println(i);
-        }*/
+        }
 
-       System.out.println(newTaskManager.getPrioritizedTasks());
+        System.out.println(newTaskManager.getPrioritizedTasks());
 
     }
 

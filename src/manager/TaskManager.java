@@ -10,9 +10,9 @@ import java.util.TreeSet;
 
 public interface TaskManager {
 
-   TreeSet getPrioritizedTasks();
+    TreeSet getPrioritizedTasks();
 
-   void fromString(String value);
+    void fromString(String value);
 
     void objectTask(Task task);
 

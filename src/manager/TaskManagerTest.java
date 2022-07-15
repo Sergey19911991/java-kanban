@@ -12,7 +12,7 @@ import tasks.Epic;
 
 import java.time.LocalDateTime;
 
-abstract class TaskManagerTest <T extends TaskManager> {
+abstract class TaskManagerTest<T extends TaskManager> {
     public T taskManager;
 
     public abstract T createTaskManager();
@@ -41,7 +41,6 @@ abstract class TaskManagerTest <T extends TaskManager> {
     }
 
 
-
     @Test
     public void addSubTask() {
         Epic epic = new Epic("Task", "Task", LocalDateTime.of
@@ -49,7 +48,7 @@ abstract class TaskManagerTest <T extends TaskManager> {
         taskManager.objectEpic(epic);
         Subtask subtask = new Subtask("Task", "Task", LocalDateTime.of
                 (2012, 1, 1, 3, 0), 80);
-        taskManager.objectSubTask(subtask,1);
+        taskManager.objectSubTask(subtask, 1);
         assertNotNull(taskManager.getSubtask(2), "Задача не найдена.");
         assertEquals(subtask, taskManager.getSubtask(2), "Задачи не совпадают");
     }

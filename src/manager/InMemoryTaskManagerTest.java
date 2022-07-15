@@ -7,13 +7,14 @@ import org.junit.jupiter.api.Test;
 public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Override
-    public InMemoryTaskManager createTaskManager(){
-        return new InMemoryTaskManager(){
+    public InMemoryTaskManager createTaskManager() {
+        return new InMemoryTaskManager() {
             @Override
             public void fromString(String value) {
             }
         };
     }
+
     @BeforeEach
     public void updateTaskManager() {
         taskManager = createTaskManager();
@@ -21,17 +22,17 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
     }
 
     @Test
-    public void addTask(){
+    public void addTask() {
         super.addTask();
     }
 
     @Test
-    public void addEpic(){
+    public void addEpic() {
         super.addNewEpic();
     }
 
     @Test
-    public void addSubTask(){
+    public void addSubTask() {
         super.addTask();
     }
 
