@@ -25,6 +25,9 @@ public class Epic extends Task {
         this.endTime=endTime;
     }
 
+    public LocalDateTime getEndTime(){
+        return this.endTime;
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -13,17 +13,12 @@ public abstract class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     protected final HashMap<Integer, Subtask> subTaskHashMap = new HashMap<>();
 
-    private int numberTask;
+    protected static int numberTask;
 
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    Comparator<Task> taskComp = new Comparator<Task>() {
-        @Override
-        public int compare(Task o1, Task o2) {
-            return o1.getStartTime().compareTo(o2.getStartTime());
+    private Comparator<Task> taskComp = (o1,o2)->o1.getStartTime().compareTo(o2.getStartTime());
 
-        }
-    };
     protected final TreeSet<Task> treeTask = new TreeSet(taskComp);
     protected final TreeSet<Task> treeSubTask = new TreeSet(taskComp);
 
@@ -158,8 +153,9 @@ public abstract class InMemoryTaskManager implements TaskManager {
             sumDuration = sumDuration + subTaskHashMap.get(i).getDuration();
         }
         epicHashMap.get(identifier).setDuration(sumDuration);
-        validatorSubTimeTasks(subTask);
+        validatorTimeTasks(subTask);
         treeSubTask.add(subTask);
+        treeTask.add(subTask);
         epicHashMap.get(identifier).setStartTime(treeSubTask.first().getStartTime());
         epicHashMap.get(identifier).setEndTime(treeSubTask.last().getEndTime());
     }
@@ -192,7 +188,9 @@ public abstract class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubTask(int identifier, Subtask subtask, Enum.Status newStatus) {
         treeSubTask.remove(subTaskHashMap.get(identifier));
-        validatorSubTimeTasks(subtask);
+        treeTask.remove(subTaskHashMap.get(identifier));
+        validatorTimeTasks(subtask);
+        treeTask.add(subtask);
         treeSubTask.add(subtask);
         int numberEpic = subTaskHashMap.get(identifier).getIdEpic();
         subTaskHashMap.remove(identifier);
@@ -285,10 +283,6 @@ public abstract class InMemoryTaskManager implements TaskManager {
         return treeTask;
     }
 
-
-    public TreeSet getPrioritizedSubTasks(){
-        return treeSubTask;
-    }
 
     private void validatorTimeTasks(Task task) {
         for (Task priorityTask : treeTask) {
