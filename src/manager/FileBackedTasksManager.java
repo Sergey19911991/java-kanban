@@ -160,7 +160,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringTask;
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) {
+    private static FileBackedTasksManager loadFromFile(File file) {
         numberTask = 0;
         String historyFile = null;
         try {
@@ -222,7 +222,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static List<Integer> fromStringHistory(String value) {
+    private static List<Integer> fromStringHistory(String value) {
         List<Integer> history = new ArrayList<>();
         String[] split = value.split(", ");
         for (int i = 0; i < split.length; i++) {
@@ -250,6 +250,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager1.updateSubTask(3, new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
                 (1998, 1, 1, 3, 0), 80), Enum.Status.DONE);
         manager1.getTask(4);
+        manager1.removeTaskIdentifier(2);
+        manager1.removeSubTaskEpicIdentifier(3);
         System.out.println(manager1.getHistory());
 
 
