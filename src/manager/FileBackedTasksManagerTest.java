@@ -1,7 +1,10 @@
 package manager;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.Subtask;
 import tasks.Task;
 
 import java.io.File;
@@ -22,18 +25,51 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
 
     @BeforeEach
     public void updateTaskManager() {
-        taskManager = createTaskManager();
+        taskManager = new FileBackedTasksManager(new File("test.txt"));
         super.updateTaskManager();
     }
 
-    @Test
-    public void toStringTest() {
-        Task task = new Task("!!!!!", "&&&&&&", LocalDateTime.of
-                (2010, 1, 1, 3, 0), 0);
-        taskManager.objectTask(task);
-        String stringTask = taskManager.toString(task);
+    @AfterEach
+    void deleteFile(){
+        File file = new File("test.txt");
+        file.delete();
+    }
 
-        assertEquals(stringTask, "1, TASK, !!!!!, NEW, &&&&&&, 2010-01-01T03:00, 0, ", "Строки не совпадают");
+    @Test
+    public void noTask() {
+        File file = new File("test.txt");
+        taskManager.save();
+        TaskManager managerFile = taskManager.loadFromFile(file);
+        assertEquals(0, managerFile.writeTask().size(), "Ошибка при считывании файла");
+        assertEquals(0, managerFile.writeEpic().size(), "Ошибка при считывании файла");
+        assertEquals(0, managerFile.writeSubTask().size(), "Ошибка при считывании файла");
+    }
+
+    @Test
+    public void noHistory() {
+        File file = new File("test.txt");
+        Epic epic = new Epic("Task", "Task", LocalDateTime.of
+                (2012, 1, 1, 3, 0), 80);
+        taskManager.objectEpic(epic);
+        Subtask subtask = new Subtask("Task", "Task", LocalDateTime.of
+                (2012, 1, 1, 3, 0), 80);
+        taskManager.objectSubTask(subtask, 1);
+        Subtask subtask1 = new Subtask("Task", "Task", LocalDateTime.of
+                (1999, 1, 1, 3, 0), 80);
+        taskManager.objectSubTask(subtask1, 1);
+        TaskManager managerFile = taskManager.loadFromFile(file);
+        assertEquals(0, managerFile.getHistory().size(), "Ошибка при считывании файла");
+    }
+
+    @Test
+    public void noSubTask() {
+        File file = new File("test.txt");
+        Epic epic = new Epic("Task", "Task", LocalDateTime.of
+                (2012, 1, 1, 3, 0), 80);
+        taskManager.objectEpic(epic);
+        TaskManager managerFile = taskManager.loadFromFile(file);
+        assertEquals(0, managerFile.writeSubTask().size(), "Ошибка при считывании файла");
+        assertEquals(1, managerFile.writeEpic().size(), "Ошибка при считывании файла");
     }
 
 }

@@ -160,8 +160,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringTask;
     }
 
-    private static FileBackedTasksManager loadFromFile(File file) {
-        numberTask = 0;
+    public static FileBackedTasksManager loadFromFile(File file) {
         String historyFile = null;
         try {
             historyFile = Files.readString(Path.of(file.getAbsolutePath()));
