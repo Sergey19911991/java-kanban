@@ -267,14 +267,6 @@ class EpicAdapter extends TypeAdapter<Epic> {
                 token = reader.peek();
                 epic.setDescription(reader.nextString());
             }
-            /*if ("duration".equals(fieldname)) {
-                token = reader.peek();
-                task.setDuration(reader.nextInt());
-            }
-            if("startTime".equals(fieldname)){
-                token = reader.peek();
-                task.setStartTime(LocalDateTime.parse(reader.nextString(),formatter));
-            }*/
         }
         reader.endObject();
         return epic;
