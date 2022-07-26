@@ -8,12 +8,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 
 class EpicTest {
     @Test
-    void statusNew() {
+    void statusNew() throws IOException {
         TaskManager manager = Managers.getDefault();
         manager.objectEpic(new Epic("Epic", "Epic",
                 null, 80));
@@ -25,7 +26,7 @@ class EpicTest {
     }
 
     @Test
-    void statusDone() {
+    void statusDone() throws IOException{
         TaskManager manager = Managers.getDefault();
         manager.objectEpic(new Epic("Epic", "Epic",
                 null, 80));
@@ -41,7 +42,7 @@ class EpicTest {
     }
 
     @Test
-    void statusDoneNew() {
+    void statusDoneNew() throws IOException{
         TaskManager manager = Managers.getDefault();
         manager.objectEpic(new Epic("Epic", "Epic",
                 null, 80));
@@ -56,7 +57,7 @@ class EpicTest {
 
 
     @Test
-    void statusInProgress() {
+    void statusInProgress() throws IOException{
         TaskManager manager = Managers.getDefault();
         manager.objectEpic(new Epic("Epic", "Epic",
                 null, 80));
@@ -72,7 +73,7 @@ class EpicTest {
     }
 
     @Test
-    void statusEpic() {
+    void statusEpic() throws IOException{
         TaskManager manager = Managers.getDefault();
         manager.objectEpic(new Epic("Epic", "Epic",
                 null, 80));

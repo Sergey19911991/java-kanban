@@ -31,6 +31,8 @@ public abstract class InMemoryTaskManager implements TaskManager {
         taskHashMap.put(task.getId(), task);
         validatorTimeTasks(task);
         treeTask.add(task);
+
+
     }
 
     //Вывод всех задач
@@ -73,6 +75,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
     // Замена задачи
     @Override
     public void updateTask(int identifier, Task task, Enum.Status newStatus) {
+
         if (taskHashMap.get(identifier) != null) {
             treeTask.remove(taskHashMap.get(identifier));
             validatorTimeTasks(task);
@@ -81,6 +84,7 @@ public abstract class InMemoryTaskManager implements TaskManager {
             taskHashMap.put(identifier, task);
             task.setStatusTask(newStatus);
             task.setId(identifier);
+
         }
     }
 

@@ -28,6 +28,14 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public void setName(String nameTask){
+        this.nameTask= nameTask;
+    }
+
+    public void setDescription(String descriptionTask){
+        this.descriptionTask= descriptionTask;
+    }
+
     public String getNameTask() {
         return this.nameTask;
     }

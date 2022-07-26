@@ -17,6 +17,10 @@ import java.time.LocalDateTime;
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
 
+    public FileBackedTasksManager() {
+        file = null;
+    }
+
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
@@ -64,7 +68,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         return historyId.toString();
     }
-
 
     @Override
     public void objectTask(Task task) {
@@ -221,7 +224,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private static List<Integer> fromStringHistory(String value) {
+    protected static List<Integer> fromStringHistory(String value) {
         List<Integer> history = new ArrayList<>();
         String[] split = value.split(", ");
         for (int i = 0; i < split.length; i++) {
@@ -232,40 +235,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     public static void main(String[] args) {
-        File file = new File("fileWriter.txt");
-        TaskManager manager1 = Managers.getDefault();
-
-
-        manager1.objectEpic(new Epic("Поменять работу", "Чтобы больше была зарплата", null, 0));
-
-        manager1.objectSubTask(new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
-                (2010, 1, 1, 4, 0), 80), 1);
-        manager1.objectSubTask(new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
-                (1999, 1, 1, 2, 0), 80), 1);
-        manager1.objectTask(new Task("!!!!!", "&&&&&&", LocalDateTime.of
-                (2010, 1, 1, 3, 0), 0));
-        manager1.updateSubTask(2, new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
-                (1999, 1, 1, 4, 0), 80), Enum.Status.DONE);
-        manager1.updateSubTask(3, new Subtask("Искать работу", "Всеми способами", LocalDateTime.of
-                (1998, 1, 1, 3, 0), 80), Enum.Status.DONE);
-        manager1.getTask(4);
-        manager1.removeTaskIdentifier(2);
-        manager1.removeSubTaskEpicIdentifier(3);
-        System.out.println(manager1.getHistory());
-
-
-        FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(file);
-        for (Task i : newTaskManager.writeTask()) {
-            System.out.println(i);
-        }
-        for (Epic i : newTaskManager.writeEpic()) {
-            System.out.println(i);
-        }
-        for (Subtask i : newTaskManager.writeSubTask()) {
-            System.out.println(i);
-        }
-
-        System.out.println(newTaskManager.getPrioritizedTasks());
 
     }
 

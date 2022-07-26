@@ -30,7 +30,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
     }
 
     @AfterEach
-    void deleteFile(){
+    void deleteFile() {
         File file = new File("test.txt");
         file.delete();
     }
