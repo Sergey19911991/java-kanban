@@ -1,10 +1,8 @@
 package manager;
 
-import com.sun.net.httpserver.HttpServer;
+import server.KVServer;
 
 import java.io.IOException;
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -35,7 +33,7 @@ public class KVTaskClient {
         this.apiToken = response.body();
     }
 
-    void put(String key, String json) throws IOException {
+   public void put(String key, String json) throws IOException {
         URI uri = URI.create(url + "save/" + key + "?API_TOKEN=" + apiToken);
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder()
@@ -54,7 +52,7 @@ public class KVTaskClient {
         System.out.println("Тело ответа: " + response.body());
     }
 
-    String load(String key) throws IOException {
+   public String load(String key) throws IOException {
         URI uri = URI.create(url + "load/" + key + "?API_TOKEN=" + apiToken);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -70,6 +68,7 @@ public class KVTaskClient {
         }
         System.out.println("Код ответа: " + response.statusCode());
         System.out.println("Тело ответа: " + response.body());
+
         return response.body();
     }
 

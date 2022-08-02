@@ -1,6 +1,7 @@
 package manager;
 
 
+import Interface.HistoryManager;
 import tasks.Task;
 
 import java.util.Map;

@@ -3,7 +3,7 @@ package tasks;
 import static org.junit.jupiter.api.Assertions.*;
 
 import manager.Managers;
-import manager.TaskManager;
+import Interface.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

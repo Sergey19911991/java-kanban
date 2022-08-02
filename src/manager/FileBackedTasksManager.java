@@ -2,6 +2,7 @@ package manager;
 
 import java.io.*;
 
+import Interface.HistoryManager;
 import exceptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.Subtask;
