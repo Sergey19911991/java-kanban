@@ -42,11 +42,12 @@ public class KVServer {
                     h.sendResponseHeaders(400, 0);
                     return;
                 }
-                if (!data.get(key).isEmpty()) {
+                if (data.containsKey(key)) {
                     sendText(h, data.get(key));
                     h.sendResponseHeaders(200, 0);
-                } else{
-                    return;
+                } else {
+                    System.out.println("Key для сохранения не найден");
+                    h.sendResponseHeaders(400, 0);
                 }
             } else {
                 System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
@@ -111,7 +112,7 @@ public class KVServer {
         server.start();
     }
 
-    public void stop(){
+    public void stop() {
         server.stop(0);
     }
 
@@ -141,6 +142,5 @@ public class KVServer {
 
 
     }
-
 
 }

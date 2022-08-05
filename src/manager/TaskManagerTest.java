@@ -12,6 +12,7 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.Epic;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.List;
 abstract class TaskManagerTest<T extends TaskManager> {
     public T taskManager;
 
-    public abstract T createTaskManager();
+    public abstract T createTaskManager() throws IOException;
 
     @BeforeEach
-    public void updateTaskManager() {
+    public void updateTaskManager() throws IOException {
         taskManager = (T) createTaskManager();
     }
 

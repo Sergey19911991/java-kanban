@@ -63,6 +63,7 @@ public class KVTaskClient {
         HttpResponse<String> response = null;
         try {
             response = client.send(request, handler);
+            response.statusCode();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -8,6 +8,7 @@ import tasks.Epic;
 import tasks.Subtask;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +25,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
     }
 
     @BeforeEach
-    public void updateTaskManager() {
+    public void updateTaskManager() throws IOException {
         taskManager = new FileBackedTasksManager(new File("test.txt"));
         super.updateTaskManager();
     }

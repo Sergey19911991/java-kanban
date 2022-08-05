@@ -3,6 +3,8 @@ package manager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Override
@@ -15,7 +17,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
     }
 
     @BeforeEach
-    public void updateTaskManager() {
+    public void updateTaskManager() throws IOException {
         taskManager = createTaskManager();
         super.updateTaskManager();
     }
